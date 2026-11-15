@@ -7,7 +7,7 @@ Have fun and **bounce back**!
 Python 3.13+
 
 ## About the Game
-The theme of this game is "Bounce Back." We made this for the Haven Hackathon in Omaha. The main premise is that you want to *bounce* the enemies off your shield to increase your score. The enemies then *bounce back* towards you, and the cycle repeats. This game also has an upgrade system, kind of like a rougelike game! There is no winning or loosing, you just try to get a high score. This was made with Pygame and external sound assets.
+The theme of this game is "Bounce Back." We made this for the Haven Hackathon in Omaha. The main premise is that you want to *bounce* the enemies off your shield to increase your score. The enemies then *bounce back* towards you, and the cycle repeats. This game also has an upgrade system, kind of like a rouge-like game! There is no winning or loosing, you just try to get a high score. This was made with Pygame and external sound assets.
 
 ## Gameplay demo
 ![Gameplay gif](python_dtkBtF8cYt.gif)
