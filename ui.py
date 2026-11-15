@@ -40,6 +40,7 @@ def wrap(font, text, width):
             lines.append(word)
     return lines
 
+# Creates the UI class
 
 class Ui:
     def __init__(self):
@@ -53,14 +54,20 @@ class Ui:
         self.shade = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
         self.shade.fill((12, 13, 18, 170))
 
+    # Shows the text on teh screen
+
     def text(self, surf, msg, font, color, pos, anchor="midtop"):
         img = font.render(msg, True, color)
         surf.blit(img, img.get_rect(**{anchor: pos}))
+
+    # Creates the upgrade menu
 
     def card_rects(self, count):
         w, h, gap = 250, 140, 24
         x0 = (WIDTH - count * w - (count - 1) * gap) // 2
         return [pygame.Rect(x0 + i * (w + gap), 250, w, h) for i in range(count)]
+
+    # Draws the score, level progress, lives, and slow ability status
 
     def draw_hud(self, surf, game):
         self.text(surf, f"Score {game.score}", self.font, TEXT, (16, 10), "topleft")
@@ -77,6 +84,8 @@ class Ui:
                 msg, color = "Slow ready [Space]", SLOW_COLOR
             self.text(surf, msg, self.small, color, (WIDTH // 2, 14))
 
+    # Draws the upgrades menu
+
     def draw_upgrades(self, surf, game):
         surf.blit(self.shade, (0, 0))
         self.text(surf, "Level Up", self.big, TEXT, (WIDTH // 2, 120))
@@ -90,6 +99,8 @@ class Ui:
             self.text(surf, f"Level {level}/{cap}", self.small, PLAYER_COLOR, (rect.x + 18, rect.y + 50), "topleft")
             for i, line in enumerate(wrap(self.small, upgrades.describe(key, level), rect.width - 36)):
                 self.text(surf, line, self.small, DIM, (rect.x + 18, rect.y + 82 + i * 22), "topleft")
+
+    # Draws the screen to show the start menu, pause screen, and game-over screen
 
     def draw_screen(self, surf, title, lines, prompt=None, shade=True):
         if shade:

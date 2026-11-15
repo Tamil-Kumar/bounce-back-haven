@@ -10,6 +10,8 @@ This module handles all of the constant variables, colors, and settings for the 
 
 import os
 
+# Defines all the game/screen variables and the files
+
 WIDTH, HEIGHT = 960, 640
 FPS = 60
 TITLE = "Bounce Back"

@@ -16,7 +16,7 @@ import pygame.gfxdraw
 from settings import *
 from ui import bar, soft_circle
 
-# Laods and resizes character
+# Loads and resizes character
 
 def load_character():
     image = pygame.image.load(CHARACTER_FILE).convert_alpha()
@@ -128,8 +128,13 @@ class Player:
 # Creates enemy class
 
 class Enemy:
+
+    # Initializes the enemy position
+
     def __init__(self, pos):
         self.reset(pos)
+
+    # Resets the enemy
 
     def reset(self, pos):
         self.pos = pygame.Vector2(pos)
@@ -137,6 +142,8 @@ class Enemy:
         self.vel = pygame.Vector2()
         self.bouncing = False
         self.warmup = WARMUP
+
+    # Moves the enemies and check if its 
 
     def move(self, target, speed, dt):
         self.last_pos = self.pos.copy()
@@ -147,6 +154,8 @@ class Enemy:
             self.vel.scale_to_length(speed)
         self.pos += self.vel * dt
 
+        # Checks if the enemy has hit the player
+        
         hit = False
         for i, size in enumerate((WIDTH, HEIGHT)):
             if self.pos[i] < ENEMY_RADIUS:
@@ -154,6 +163,8 @@ class Enemy:
             elif self.pos[i] > size - ENEMY_RADIUS:
                 self.pos[i], self.vel[i], hit = size - ENEMY_RADIUS, -abs(self.vel[i]), True
         return hit
+
+    # Draws the enemies
 
     def draw(self, surf, slowed, alpha):
         if self.warmup > 0:
@@ -163,22 +174,32 @@ class Enemy:
         color = SLOW_COLOR if slowed else BOUNCE_COLOR if self.bouncing else ENEMY_COLOR
         soft_circle(surf, color, self.last_pos + (self.pos - self.last_pos) * alpha, ENEMY_RADIUS)
 
+# Creates a laser class
 
 class Laser:
+
+    # Initializes variables for the laser
+
     def __init__(self, pos, direction):
         self.pos = pygame.Vector2(pos)
         self.dir = pygame.Vector2(direction)
         self.alive = True
+
+    # Updates the location of the laser
 
     def update(self, dt):
         self.pos += self.dir * LASER_SPEED * dt
         if not (0 <= self.pos.x <= WIDTH and 0 <= self.pos.y <= HEIGHT):
             self.alive = False
 
+    # Checks if laser is hitting enemy
+
     def hits(self, point, radius):
         tail = self.pos - self.dir * LASER_LENGTH
         t = max(0.0, min(1.0, (point - tail).dot(self.dir) / LASER_LENGTH))
         return point.distance_to(tail + self.dir * LASER_LENGTH * t) < radius
+    
+    # Draws the laser
 
     def draw(self, surf):
         pygame.draw.line(surf, LASER_COLOR, self.pos - self.dir * LASER_LENGTH, self.pos, 2)

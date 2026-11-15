@@ -7,6 +7,7 @@ Author: Tamil Kumar, Srihaas Yeluri
 
 This module is the main game file. Handles rendering and functionality.
 '''
+# Importing stuff
 
 import math
 import random
@@ -19,6 +20,7 @@ from entities import Enemy, Laser, Player
 from settings import *
 from ui import Ui
 
+# Loads the best score
 
 def load_best():
     try:
@@ -27,6 +29,7 @@ def load_best():
     except (OSError, ValueError):
         return 0
 
+# Saves the best score
 
 def save_best(value):
     try:
@@ -35,6 +38,7 @@ def save_best(value):
     except OSError:
         pass
 
+# Loads the sound
 
 def load_sound(path, volume):
     try:
@@ -44,6 +48,7 @@ def load_sound(path, volume):
     sound.set_volume(volume)
     return sound
 
+# Plays the music
 
 def play_music():
     try:
@@ -53,8 +58,12 @@ def play_music():
     except pygame.error:
         pass
 
+# Creates the game display
 
 class Game:
+
+    # Initializes the game display variables
+    
     def __init__(self):
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption(TITLE)
@@ -67,6 +76,8 @@ class Game:
         self.state = "menu"
         self.reset()
         play_music()
+
+    # Resets the game
 
     def reset(self):
         self.player = Player()
@@ -84,8 +95,12 @@ class Game:
         self.wave_clock = self.wave_flash = 0.0
         self.spawn_enemy()
 
+    # Points needed to get the next level
+
     def needed(self):
         return 100 + UPGRADE_POINTS * (self.level - 1)
+
+    # Randomizes the location of enemies
 
     def edge_point(self):
         m = ENEMY_RADIUS + 6
@@ -99,8 +114,12 @@ class Game:
                 break
         return x, y
 
+    # Spawns the enemy
+
     def spawn_enemy(self):
         self.enemies.append(Enemy(self.edge_point()))
+
+    # Adds the score
 
     def add_score(self, amount):
         self.score += amount
@@ -114,11 +133,15 @@ class Game:
         if leveled and self.level_up_sound:
             self.level_up_sound.play()
 
+    # Gives the upgrade options
+
     def open_upgrades(self):
         self.choices = upgrades.roll(self.levels)
         if not self.choices:
             self.pending = 0
         self.state = "upgrade" if self.choices else "play"
+
+    # Applies the upgrades to the player
 
     def apply_stats(self):
         player = self.player
@@ -126,6 +149,8 @@ class Game:
         player.heat_time = HEAT_TIME + self.levels["heat"]
         player.recovery = HIT_INVULN + 0.5 * self.levels["recovery"]
         player.shield_level = self.levels["shield"]
+
+    # Handles shockwave upgrade functionality
 
     def shockwave(self):
         radius = upgrades.wave_radius(self.levels["wave"])
@@ -137,6 +162,8 @@ class Game:
         self.wave_flash = 0.3
         if self.hit_sound:
             self.hit_sound.play()
+
+    # Handles the picking the upgrade function
 
     def pick(self, index):
         if index >= len(self.choices):
@@ -152,6 +179,8 @@ class Game:
         else:
             self.state = "play"
 
+    # Fires the lasers
+
     def fire_lasers(self):
         if self.shoot_sound:
             self.shoot_sound.play()
@@ -162,6 +191,8 @@ class Game:
                 a = center if count == 1 else center - spread / 2 + spread * i / (count - 1)
                 d = pygame.Vector2(math.cos(a), math.sin(a))
                 self.lasers.append(Laser(self.player.pos + d * (SHIELD_RADIUS + 6), d))
+
+    # Updates the game
 
     def update(self, dt):
         self.time_alive += dt
@@ -222,6 +253,8 @@ class Game:
         elif self.pending > 0:
             self.open_upgrades()
 
+    # Handles the movement of the enemy
+
     def step_enemy(self, enemy, speed, dt):
         player = self.player
         if enemy.move(player.pos, speed, dt) and enemy.bouncing:
@@ -245,6 +278,8 @@ class Game:
             enemy.reset(self.edge_point())
             return True
         return False
+
+    # Handles key and mouse input
 
     def handle(self, event):
         clicked = event.type == pygame.MOUSEBUTTONDOWN and event.button == 1
@@ -275,6 +310,8 @@ class Game:
         elif self.state == "over" and self.over_time > 0.6 and (clicked or key in (pygame.K_r, pygame.K_RETURN)):
             self.reset()
             self.state = "play"
+
+    # Draws the screen window
 
     def draw(self):
         surf = self.screen
@@ -315,6 +352,8 @@ class Game:
             prompt = "Click or press R to play again" if self.over_time > 0.6 else None
             self.ui.draw_screen(surf, "Game Over", lines, prompt)
         pygame.display.flip()
+
+    # Runs the game
 
     def run(self):
         while True:

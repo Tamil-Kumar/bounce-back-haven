@@ -45,7 +45,7 @@ def describe(key, level):
         "wave": f"Knock back enemies within {wave_radius(level)}px every {SHOCKWAVE_INTERVAL:g}s.",
     }[key]
 
-# 
+# Handles the randomness of the upgrades
 
 def roll(levels):
     available = [key for key, (_, cap) in UPGRADES.items() if levels[key] < cap]
