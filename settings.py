@@ -14,7 +14,7 @@ import os
 
 WIDTH, HEIGHT = 960, 640
 FPS = 60
-TITLE = "Bounce Back"
+TITLE = "After Shock"
 FONT_NAME = "trebuchetms,verdana,arial"
 BEST_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "best.txt")
 CHARACTER_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "images", "character.png")
